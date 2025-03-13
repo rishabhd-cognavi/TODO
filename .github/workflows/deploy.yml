@@ -3,7 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # or your default branch
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -11,22 +12,35 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "npm"
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
+        continue-on-error: false
 
       - name: Build
         run: npm run build
+        env:
+          NODE_ENV: production
+          CI: true
+        continue-on-error: false
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
+        if: success()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          enable_jekyll: false
+          commit_message: "Deploy to GitHub Pages"

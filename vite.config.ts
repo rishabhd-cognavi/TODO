@@ -3,6 +3,6 @@ import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  base: "/TODO/", // This should match your GitHub repository name
+  base: process.env.NODE_ENV === "production" ? "/TODO/" : "/",
   plugins: [react(), tailwindcss()],
 });
