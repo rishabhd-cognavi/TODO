@@ -1,3 +1,7 @@
+# ToDo App
+
+Visit the deployed site: [https://rishabhd-cognavi.github.io/TODO/](https://rishabhd-cognavi.github.io/TODO/)
+
 # Modern Todo Board Application
 
 A Trello-style Todo board application built with React, TypeScript, and modern web technologies. Features drag-and-drop functionality, real-time updates, and a responsive design.
@@ -5,40 +9,40 @@ A Trello-style Todo board application built with React, TypeScript, and modern w
 ## 🚀 Features
 
 - Kanban-style board with three columns (Pending, In Progress, Completed)
-- Drag and drop todos between columns
-- Create, edit, and delete todos
-- Checklist items within todos
-- Progress tracking for each todo
-- Responsive design for mobile and desktop
+- Drag and drop todos between columns with smooth animations
+- Create, edit, and delete todos with optimistic updates
+- Detailed todo items with descriptions and checklists
+- Progress tracking with visual progress bars
+- Toast notifications for user feedback
 - Error boundaries for graceful error handling
-- Optimistic updates for better UX
+- Responsive design for mobile and desktop
 - TypeScript for type safety
-- Modern animation effects
+- Modern animation effects using Framer Motion
 
 ## 🛠️ Tech Stack
 
-- **Frontend Framework**: React 19
-- **Language**: TypeScript
+- **Frontend Framework**: React 19 with TypeScript
 - **Build Tool**: Vite
-- **State Management**: React Context + React Query
+- **State Management**: React Context + Custom Hooks
 - **HTTP Client**: Axios
 - **Styling**: TailwindCSS
 - **Animations**: Framer Motion
-- **API Integration**: REST API (dummyjson.com)
-- **Code Quality**: ESLint, TypeScript strict mode
+- **Icons**: React Icons
+- **API Integration**: DummyJSON REST API
+- **Code Quality**: ESLint with TypeScript support
 - **Development Tools**: Hot Module Replacement (HMR)
 
 ## 📦 Prerequisites
 
 - Node.js (v18 or higher)
-- npm or yarn or pnpm
+- npm, yarn, or pnpm
 
 ## 🔧 Installation
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/TODO.git
+git clone <repository-url>
 cd TODO
 ```
 
@@ -68,151 +72,172 @@ yarn dev
 pnpm dev
 ```
 
-## 🏗️ Build
+## 🏗️ Available Scripts
 
-To build for production:
-
-```bash
-npm run build
-# or
-yarn build
-# or
-pnpm build
-```
-
-## 🧪 Type Checking
-
-```bash
-npm run typecheck
-# or
-yarn typecheck
-# or
-pnpm typecheck
-```
-
-## 🔍 Linting
-
-```bash
-npm run lint
-# or
-yarn lint
-# or
-pnpm lint
-```
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
 
 ## 📁 Project Structure
 
 ```
 src/
-├── components/        # React components
-├── context/          # React context providers
-├── hooks/            # Custom React hooks
-├── services/         # API services
-├── types/            # TypeScript types/interfaces
-├── utils/            # Utility functions
-└── constants/        # Constants and enums
+├── components/          # React components
+│   ├── BoardHeader.tsx  # Board header with actions
+│   ├── ErrorBoundary.tsx # Error handling wrapper
+│   ├── Lane.tsx        # Kanban lane component
+│   ├── Toast/          # Toast notification components
+│   ├── TodoBoard.tsx   # Main board component
+│   ├── TodoCard.tsx    # Individual todo card
+│   └── TodoModal.tsx   # Create/Edit modal
+├── context/            # React context providers
+├── constants/          # Application constants
+├── services/          # API services
+├── types/             # TypeScript types
+└── utils/             # Utility functions
 ```
 
 ## 🔒 Environment Variables
 
-| Variable     | Description      | Required |
-| ------------ | ---------------- | -------- |
-| VITE_API_URL | API endpoint URL | Yes      |
+| Variable     | Description            | Required |
+| ------------ | ---------------------- | -------- |
+| VITE_API_URL | DummyJSON API endpoint | Yes      |
 
-## 🤝 Contributing
+## ⚡️ Performance Features
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- Memoized components using React.memo
+- Optimistic updates for better UX
+- Debounced API calls
+- Efficient state management with Context API
+- Code splitting and lazy loading
+- Type-safe development with TypeScript
 
-## 📝 Code Style Guide
+## 🔐 Error Handling
 
-- Use TypeScript strict mode
-- Follow ESLint rules
-- Use functional components with hooks
-- Implement error boundaries for error handling
-- Use async/await for API calls
-- Follow React best practices
+- Global error boundary for React errors
+- API error handling with custom error types
+- Toast notifications for user feedback
+- Type-safe error handling with TypeScript
 
-## 🚀 Deployment
+## 🎨 UI/UX Features
 
-The application can be deployed to any static hosting service:
+- Smooth drag and drop animations
+- Progress bars for todo completion
+- Toast notifications for user actions
+- Responsive design for all screen sizes
+- Loading states and spinners
+- Modal dialogs for todo operations
 
-1. Build the application:
+## 📝 Code Style
 
-```bash
-npm run build
-```
+This project follows strict TypeScript and ESLint configurations for consistent code style:
 
-2. Deploy the `dist` directory to your hosting service
+- Strict TypeScript checks
+- ESLint with React hooks rules
+- Consistent file and folder structure
+- Component memoization where beneficial
+- Proper type definitions
 
-Popular hosting options:
+## 🎯 Design Decisions & Patterns
 
-- Vercel
-- Netlify
-- GitHub Pages
-- AWS S3 + CloudFront
+### Architecture
 
-## ⚖️ License
+- **Component-Based Architecture**: Modular components for better maintainability and reusability
+- **Container/Presenter Pattern**: Separation of logic (TodoProvider) from presentation (TodoBoard, Lane)
+- **Context API**: Global state management without prop drilling
+- **Custom Error Boundary**: Graceful error handling at component level
+
+### State Management
+
+- **Optimistic Updates**: UI updates before API confirmation for better UX
+- **Immutable State Updates**: Using spread operators and map/filter for predictable state changes
+- **Loading States**: Granular loading states per todo item for better UX
+- **Memoization**: Strategic use of useMemo and useCallback for performance
+
+### Performance Optimizations
+
+- **Debounced API Calls**: Prevent API spam during rapid user actions
+- **Conditional Rendering**: Components render only when necessary
+- **React.memo**: Prevent unnecessary re-renders of heavy components
+- **Cleanup Effects**: Proper cleanup of subscriptions and timeouts
+- **AbortController**: Cancel pending API requests on unmount
+
+### Error Handling Strategy
+
+- **Custom Error Types**: Type-safe error handling with TodoError
+- **API Error Interceptors**: Consistent API error handling
+- **Toast Notifications**: User-friendly error messages
+- **Fallback UI**: Graceful degradation during errors
+
+## 🚧 Known Limitations
+
+1. **API Limitations**
+
+   - DummyJSON API has limited features
+   - No real-time updates or WebSocket support
+   - Mock data restrictions
+
+2. **Performance Constraints**
+
+   - Large lists may impact drag-and-drop performance
+   - No pagination or infinite scroll
+   - All todos loaded at once
+
+3. **Feature Limitations**
+   - No offline support
+   - No data persistence
+   - Limited undo/redo capabilities
+   - Basic authentication
+
+## 🚀 Future Enhancements
+
+### Immediate Improvements
+
+1. **Performance**
+
+   - Implement virtual scrolling for large lists
+   - Add pagination or infinite scroll
+   - Optimize drag-and-drop for large datasets
+
+2. **Features**
+
+   - Offline support with Service Workers
+   - Local storage backup
+   - Undo/redo functionality
+   - Rich text editor for descriptions
+   - Due dates and reminders
+
+3. **User Experience**
+   - Keyboard shortcuts
+   - Customizable themes
+   - Board templates
+   - Search and filters
+   - Sorting options
+
+### Long-term Goals
+
+1. **Infrastructure**
+
+   - Custom backend with real-time updates
+   - User authentication and authorization
+   - Data persistence with proper database
+   - API rate limiting and caching
+
+2. **Advanced Features**
+
+   - Multiple boards support
+   - Team collaboration
+   - Activity history
+   - File attachments
+   - Advanced reporting
+
+3. **Integration**
+   - Calendar integration
+   - Email notifications
+   - Export/import functionality
+   - Third-party app integrations
+
+## 📄 License
 
 MIT License - see the [LICENSE](LICENSE) file for details
-
-## 👥 Authors
-
-- Your Name - Initial work
-
-## 🙏 Acknowledgments
-
-- React Team
-- Vite Team
-- TailwindCSS Team
-- Framer Motion Team
-- DummyJSON API Team
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
-```
