@@ -177,6 +177,7 @@ This project follows strict TypeScript and ESLint configurations for consistent 
    - DummyJSON API has limited features
    - No real-time updates or WebSocket support
    - Mock data restrictions
+   - Different API data structure requiring frontend transformations
 
 2. **Performance Constraints**
 
@@ -199,8 +200,17 @@ This project follows strict TypeScript and ESLint configurations for consistent 
    - Implement virtual scrolling for large lists
    - Add pagination or infinite scroll
    - Optimize drag-and-drop for large datasets
+   - Implement React Query for better API handling and cache management
+   - Replace Context API with React Query for simpler state management
 
-2. **Features**
+2. **Code Quality**
+
+   - Enhance ESLint configuration with stricter rules
+   - Implement Husky for pre-commit and pre-push hooks
+   - Add commit message linting
+   - Implement automated code formatting checks
+
+3. **Features**
 
    - Offline support with Service Workers
    - Local storage backup
@@ -208,7 +218,7 @@ This project follows strict TypeScript and ESLint configurations for consistent 
    - Rich text editor for descriptions
    - Due dates and reminders
 
-3. **User Experience**
+4. **User Experience**
    - Keyboard shortcuts
    - Customizable themes
    - Board templates
