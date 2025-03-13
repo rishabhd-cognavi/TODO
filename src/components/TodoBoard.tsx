@@ -1,4 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import { motion } from "framer-motion";
 import Lane from "./Lane";
 import { type Todo } from "../types";
@@ -6,14 +12,14 @@ import TodoModal from "./TodoModal";
 import BoardHeader from "./BoardHeader";
 import { TODO_STATUSES } from "../constants/todo";
 import { TodoContext } from "../context/todoContext";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const TodoBoard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const {
     todos,
-    isLoading,
-    error,
+    loadingState: { isLoading, updatingIds, deletingIds },
     loadTodos,
     addTodo,
     updateTodo,
@@ -22,24 +28,40 @@ const TodoBoard: React.FC = () => {
   } = useContext(TodoContext);
 
   useEffect(() => {
+    const controller = new AbortController();
     loadTodos();
+    return () => controller.abort();
   }, []);
 
-  const handleEditClick = (todo: Todo) => {
+  const handleEditClick = useCallback((todo: Todo) => {
     setEditingTodo(todo);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  if (isLoading)
-    return <div className="text-center text-white">Loading...</div>;
+  const todosWithLoadingState = useMemo(
+    () =>
+      todos.map((todo) => ({
+        ...todo,
+        isUpdating: updatingIds.includes(todo.id),
+        isDeleting: deletingIds.includes(todo.id),
+      })),
+    [todos, updatingIds, deletingIds]
+  );
 
-  if (error) {
+  const lanesByStatus = useMemo(
+    () =>
+      TODO_STATUSES.map((status) => ({
+        status,
+        todos: todosWithLoadingState.filter((t) => t.status === status),
+      })),
+    [todosWithLoadingState]
+  );
+
+  if (isLoading) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-        <h2 className="text-red-800 text-lg font-medium">
-          Error Loading Todos
-        </h2>
-        <p className="text-red-600 mt-1">{error.message}</p>
+      <div className="text-center text-white h-screen w-full flex justify-center items-center">
+        <AiOutlineLoading3Quarters className=" text-primary size-8 animate-spin mx-5" />
+        Loading...
       </div>
     );
   }
@@ -53,12 +75,12 @@ const TodoBoard: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
         className="flex flex-col lg:flex-row gap-4 lg:gap-5">
-        {TODO_STATUSES.map((status, index) => (
+        {lanesByStatus.map(({ status, todos }, index) => (
           <Lane
             key={status}
             status={status}
             laneIndex={index}
-            todos={todos.filter((t) => t.status === status)}
+            todos={todos}
             moveTodo={moveTodo}
             onUpdateTodo={updateTodo}
             onEditClick={handleEditClick}
@@ -67,18 +89,20 @@ const TodoBoard: React.FC = () => {
         ))}
       </motion.div>
 
-      <TodoModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditingTodo(null);
-        }}
-        onSave={editingTodo ? updateTodo : addTodo}
-        initialData={editingTodo || undefined}
-        title={editingTodo ? "Edit Todo" : "Add New Todo"}
-      />
+      {isModalOpen && (
+        <TodoModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setEditingTodo(null);
+          }}
+          onSave={editingTodo ? updateTodo : addTodo}
+          initialData={editingTodo || undefined}
+          title={editingTodo ? "Edit Todo" : "Add New Todo"}
+        />
+      )}
 
-      {todos.length === 0 && (
+      {todos.length === 0 && !isLoading && (
         <p className="text-center text-gray-500 my-4">
           No todos in this board yet. Add your first todo!
         </p>
@@ -87,4 +111,4 @@ const TodoBoard: React.FC = () => {
   );
 };
 
-export default TodoBoard;
+export default React.memo(TodoBoard);

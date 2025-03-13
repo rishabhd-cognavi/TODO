@@ -2,6 +2,7 @@ import React from "react";
 import TodoBoard from "./components/TodoBoard";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { TodoProvider } from "./context/TodoProvider";
+import { ToastContainer } from "./components/ToastContainer";
 
 const App: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
           </h1>
           <TodoBoard />
         </div>
+        <ToastContainer />
       </TodoProvider>
     </ErrorBoundary>
   );

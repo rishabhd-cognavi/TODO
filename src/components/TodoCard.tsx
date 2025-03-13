@@ -20,6 +20,7 @@ const TodoCard: React.FC<TodoCardProps> = React.memo(
 
     const handleToggleItem = useCallback(
       (itemId: string) => {
+        if (todo.isUpdating) return;
         onUpdateTodo({
           ...todo,
           items: todo.items.map((item) =>
@@ -33,6 +34,7 @@ const TodoCard: React.FC<TodoCardProps> = React.memo(
     const handleEdit = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
+        if (todo.isUpdating) return;
         onEditClick(todo);
       },
       [todo, onEditClick]
@@ -41,9 +43,10 @@ const TodoCard: React.FC<TodoCardProps> = React.memo(
     const handleDelete = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
+        if (todo.isDeleting) return;
         onDeleteTodo(todo.id);
       },
-      [todo.id, onDeleteTodo]
+      [todo.id, onDeleteTodo, todo.isDeleting]
     );
 
     const handleDragStart = () => {
@@ -99,7 +102,7 @@ const TodoCard: React.FC<TodoCardProps> = React.memo(
         onDragEnd={handleDragEnd}
         onClick={() => setIsExpanded(!isExpanded)}
         style={{ touchAction: "none" }}
-        className="group p-4 bg-white shadow-lg rounded-lg cursor-move hover:shadow-xl transition-all border border-border">
+        className="p-4 bg-white shadow-lg rounded-lg cursor-move hover:shadow-xl transition-all border border-border">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-bold text-text-primary line-clamp-1">
             {todo.title}
@@ -107,12 +110,14 @@ const TodoCard: React.FC<TodoCardProps> = React.memo(
           <div className="flex items-center space-x-2">
             <button
               onClick={handleEdit}
-              className="p-1 hover:bg-border rounded">
+              disabled={todo.isUpdating}
+              className="p-1 hover:bg-border rounded disabled:opacity-50 disabled:cursor-not-allowed">
               <CiEdit className="text-text-secondary size-5" />
             </button>
             <button
               onClick={handleDelete}
-              className="p-1 hover:bg-border rounded group">
+              disabled={todo.isDeleting}
+              className="group p-1 hover:bg-border rounded group disabled:opacity-50 disabled:cursor-not-allowed">
               <MdDelete className="text-text-secondary size-5 group-hover:text-danger" />
             </button>
           </div>
@@ -173,6 +178,8 @@ const TodoCard: React.FC<TodoCardProps> = React.memo(
     prevProps.todo.id === nextProps.todo.id &&
     prevProps.todo.title === nextProps.todo.title &&
     prevProps.todo.status === nextProps.todo.status &&
+    prevProps.todo.isDeleting === nextProps.todo.isDeleting &&
+    prevProps.todo.isUpdating === nextProps.todo.isUpdating &&
     JSON.stringify(prevProps.todo.items) ===
       JSON.stringify(nextProps.todo.items)
 );

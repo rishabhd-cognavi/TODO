@@ -1,10 +1,10 @@
 import React from "react";
 
 type BoardHeaderProps = {
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsModalOpen: (open: boolean) => void;
 };
 
-export default function BoardHeader({ setIsModalOpen }: BoardHeaderProps) {
+const BoardHeader = React.memo(({ setIsModalOpen }: BoardHeaderProps) => {
   return (
     <div className="flex flex-col sm:flex-row justify-end items-center mb-6">
       <button
@@ -14,4 +14,8 @@ export default function BoardHeader({ setIsModalOpen }: BoardHeaderProps) {
       </button>
     </div>
   );
-}
+});
+
+BoardHeader.displayName = "BoardHeader";
+
+export default BoardHeader;

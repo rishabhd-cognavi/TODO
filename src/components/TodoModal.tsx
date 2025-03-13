@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { type Todo } from "../types";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -43,46 +43,52 @@ const TodoModal: React.FC<TodoModalProps> = ({
     return Math.floor(Math.random() * 1000000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (formData.title.trim().length < 3) return;
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (formData.title.trim().length < 3) return;
 
-    onSave({
-      id: initialData?.id || generateNumericId(),
-      title: formData.title,
-      status: initialData?.status || "pending",
-      description: formData.description,
-      items: formData.items
-        .filter((item) => item.trim())
-        .map((item) => ({
-          id: crypto.randomUUID(),
-          content: item,
-          checked: false,
-        })),
-    });
-    onClose();
-  };
+      onSave({
+        id: initialData?.id || generateNumericId(),
+        title: formData.title,
+        status: initialData?.status || "pending",
+        description: formData.description,
+        items: formData.items
+          .filter((item) => item.trim())
+          .map((item) => ({
+            id: crypto.randomUUID(),
+            content: item,
+            checked: false,
+          })),
+      });
+      onClose();
+    },
+    [formData, initialData, onSave, onClose]
+  );
 
-  const addChecklistItem = () => {
+  const addChecklistItem = useCallback(() => {
     setFormData((prev) => ({
       ...prev,
       items: [...prev.items, ""],
     }));
-  };
+  }, []);
 
-  const removeChecklistItem = (index: number) => {
+  const removeChecklistItem = useCallback((index: number) => {
     setFormData((prev) => ({
       ...prev,
       items: prev.items.filter((_, i) => i !== index),
     }));
-  };
+  }, []);
 
-  const updateChecklistItem = (index: number, value: string) => {
+  const updateChecklistItem = useCallback((index: number, value: string) => {
     setFormData((prev) => ({
       ...prev,
       items: prev.items.map((item, i) => (i === index ? value : item)),
     }));
-  };
+  }, []);
+
+  // Only render if modal is open
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
@@ -185,4 +191,4 @@ const TodoModal: React.FC<TodoModalProps> = ({
   );
 };
 
-export default TodoModal;
+export default React.memo(TodoModal);
